@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Image - LeafScan AI{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="upload-section">
+    <h1 class="tagline">Identify & Protect Your Plants</h1>
+    <p class="description">
+        Upload a leaf image for instant disease diagnosis and recommended remedies.
+    </p>
+    
+    <form id="upload-form" action="/" method="POST" enctype="multipart/form-data" style="width: 100%;">
+        
+        <label for="file-upload" class="file-upload-label">
+            <div class="file-upload-label-text">
+                Drag & drop your image here, or
+                <br>
+                <span>Browse to choose a file</span>
+            </div>
+            <div id="filename-display">No file chosen</div>
+        </label>
+        
+        <input id="file-upload" class="file-upload-input" type="file" name="file" accept="image/*" required>
+        
+        <button type="submit" class="btn analyze-btn">Analyze</button>
+    </form>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // This simple script shows the name of the file the user selected
+    const fileInput = document.getElementById('file-upload');
+    const filenameDisplay = document.getElementById('filename-display');
+    
+    fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) {
+            // Display the name of the first file
+            filenameDisplay.textContent = fileInput.files[0].name;
+        } else {
+            filenameDisplay.textContent = 'No file chosen';
+        }
+    });
+</script>
+{% endblock %}

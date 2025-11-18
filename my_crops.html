@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}My Crops{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
+    <style>
+        .crop-list { list-style: none; padding: 0; }
+        .crop-list li { background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+        .crop-list li a { text-decoration: none; font-size: 1.2rem; font-weight: 600; color: #333; }
+        .crop-list li span { color: #666; font-size: 0.9rem; display: block; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>My Registered Crops</h1>
+    <p>View your saved crop timelines or register a new one.</p>
+
+    <a href="{{ url_for('register_crop') }}" class="btn">Register a New Crop</a>
+    <hr style="margin: 2rem 0;">
+
+    <h2>Saved Crops</h2>
+    {% if all_crops %}
+        <ul class="crop-list">
+            {% for crop in all_crops %}
+                <li>
+                    <a href="{{ url_for('crop_timeline', crop_id=crop.id) }}">
+                        {{ crop.crop_name }}
+                    </a>
+                    <span>Sown on: {{ crop.sowing_date.strftime('%B %d, %Y') }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have not registered any crops yet.</p>
+    {% endif %}
+
+{% endblock %}

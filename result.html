@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Result - LeafScan AI{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
+    
+    <style>
+        .recommend-btn {
+            background-color: #007bff; /* Blue button */
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+        .recommend-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        #recommendation-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            line-height: 1.7;
+            display: none; /* Hidden by default */
+        }
+
+        #recommendation-result h3 {
+            margin-top: 0;
+            color: #333;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="result-container">
+    
+    <div class="result-image-box">
+        <h3>Uploaded Image</h3>
+        <img src="{{ url_for('static', filename='images/uploads/' + filename) }}" alt="Uploaded Leaf" class="result-image">
+    </div>
+
+    <div class="result-details">
+        
+        <div class="prediction">
+            <h3>Predicted Disease:</h3>
+            {% if "healthy" in predicted_disease.lower() %}
+                <h2 class="prediction-text healthy">{{ predicted_disease }}</h2>
+            {% else %}
+                <h2 class="prediction-text">{{ predicted_disease }}</h2>
+            {% endif %}
+            <p class="confidence">Confidence: <strong>{{ confidence }}%</strong></p>
+        </div>
+
+        <div class="treatment">
+            {% if treatment %}
+                <h3>Recommended Treatment:</h3>
+                <ul class="treatment-list">
+                    {% for step in treatment %}
+                        <li>{{ step }}</li>
+                    {% endfor %}
+                </ul>
+
+                <button id="recommend-btn" class="btn recommend-btn" data-disease="{{ predicted_disease }}">
+                    🤖 Get AI-Powered Recommendations
+                </button>
+                
+            {% else %}
+                <h3>Recommendation:</h3>
+                <p>No treatment is necessary. Keep up the good work!</p>
+            {% endif %}
+        </div>
+        
+        <div id="recommendation-result">
+            </div>
+
+        <div class="back-link" style="margin-top: 2rem;">
+            <a href="{{ url_for('main') }}" class="btn">Analyze Another Leaf</a>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Find the button and the result area
+    const recommendBtn = document.getElementById('recommend-btn');
+    const resultDiv = document.getElementById('recommendation-result');
+
+    // Only add the click listener if the button exists on the page
+    if (recommendBtn) {
+        
+        recommendBtn.addEventListener('click', function() {
+            // Get the disease name we stored in the 'data-disease' attribute
+            const diseaseName = this.dataset.disease;
+
+            // Show a loading message and display the result box
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<h3>Loading AI Recommendations...</h3><p>Please wait, this may take a moment.</p>';
+            this.disabled = true; // Disable button to prevent multi-clicks
+            this.textContent = 'Loading...';
+
+            // Use 'fetch' to call our new Flask route
+            fetch('/get_recommendation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ disease: diseaseName })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    // Handle server errors (like 500)
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Success! 'data.recommendation' holds the HTML from Gemini
+                resultDiv.innerHTML = data.recommendation;
+                
+                // Re-enable the button (optional)
+                this.disabled = false;
+                this.textContent = '🤖 Get AI-Powered Recommendations';
+            })
+            .catch(error => {
+                // Handle fetch errors (like network offline)
+                console.error('Fetch error:', error);
+                resultDiv.innerHTML = '<p style="color: red;"><strong>Error:</strong> Could not retrieve recommendations. Please check your connection and try again.</p>';
+                this.disabled = false;
+                this.textContent = 'Try Again';
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

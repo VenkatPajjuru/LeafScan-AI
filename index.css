@@ -1,0 +1,77 @@
+/* static/css/index.css */
+
+.upload-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.tagline {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.description {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 2.5rem;
+    max-width: 500px;
+}
+
+/* --- Custom File Upload --- */
+
+/* Hide the ugly default input */
+.file-upload-input {
+    display: none;
+}
+
+/* Style the <label> to look like a drop zone */
+.file-upload-label {
+    width: 86%;
+    border: 3px dashed #dbebe3;
+    border-radius: 10px;
+    padding: 3rem;
+    text-align: center;
+    cursor: pointer;
+    background-color: #fcfdfc;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+
+    /* --- NEW CODE FOR CENTERING --- */
+    display: flex; /* Enables Flexbox layout */
+    flex-direction: column; /* Stacks items vertically */
+    justify-content: center; /* Centers items vertically */
+    align-items: center; /* Centers items horizontally */
+    /* --- END OF NEW CODE --- */
+}
+
+.file-upload-label:hover {
+    border-color: #28a745;
+    background-color: #f4f8f4;
+}
+
+.file-upload-label-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.file-upload-label-text span {
+    color: #28a745;
+    font-weight: 600;
+}
+
+/* This is where the chosen filename will appear */
+#filename-display {
+    margin-top: 1rem;
+    font-style: italic;
+    color: #777;
+}
+
+/* --- Analyze Button --- */
+.analyze-btn {
+    width: 100%;
+    margin-top: 2rem;
+}

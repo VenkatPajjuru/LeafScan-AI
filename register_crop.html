@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Register Crop{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="upload-section">
+    <h1 class="tagline">Register a New Crop</h1>
+    <p class="description">Enter your crop and sowing date to generate a custom timeline.</p>
+    
+    <form action="{{ url_for('register_crop') }}" method="POST" style="width: 100%;">
+        
+        <label for="crop_name" style="text-align: left; font-weight: 600; margin-top: 1rem; display: block;">Crop Name</label>
+        <input type="text" id="crop_name" name="crop_name" placeholder="E.g., Tomato, Potato" required style="width: 100%; padding: 10px; font-size: 1rem; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;">
+        
+        <label for="sowing_date" style="text-align: left; font-weight: 600; margin-top: 1rem; display: block;">Sowing Date</label>
+        <input type="date" id="sowing_date" name="sowing_date" required style="width: 100%; padding: 10px; font-size: 1rem; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;">
+        
+        <button type="submit" class="btn analyze-btn">Generate Timeline</button>
+    </form>
+</section>
+{% endblock %}

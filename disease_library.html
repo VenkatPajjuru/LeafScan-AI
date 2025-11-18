@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Disease Library{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/library.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="library-container">
+    <h1 style="text-align: center; font-size: 2.5rem; margin-bottom: 2rem;">Disease Library</h1>
+    <p style="text-align: center; font-size: 1.2rem; color: #666; margin-bottom: 2.5rem;">
+        A quick reference for diseases, identifications, and remedies for the crops we support.
+    </p>
+    
+    {% for plant_name, diseases in library.items() %}
+    
+        <details class="plant-details">
+            <summary class="plant-summary">{{ plant_name }}</summary>
+            
+            <div class="disease-list">
+                {% for disease in diseases %}
+                    <div class="disease-item">
+                        <h4 class="disease-name">{{ disease.name }}</h4>
+                        
+                        <h5 class="section-title">Identification:</h5>
+                        <ul class="identification-list">
+                            {% for item in disease.identification %}
+                                <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                        
+                        <h5 class="section-title">Recommended Remedy:</h5>
+                        <ul class="remedy-list">
+                            {% for step in disease.remedy %}
+                                <li>{{ step }}</li>
+                            {% endfor %}
+                        </ul>
+
+                    </div>
+                {% endfor %}
+            </div>
+        </details>
+        
+    {% endfor %}
+</section>
+{% endblock %}
